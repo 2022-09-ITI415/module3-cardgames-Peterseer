@@ -14,7 +14,7 @@ public class Card : MonoBehaviour {
 	
 	public GameObject back;  // back of card;
 	public CardDefinition def;  // from DeckXML.xml		
-
+	public SpriteRenderer[] spriteRenderers;
 
 	public bool faceUp {
 		get {
@@ -29,9 +29,62 @@ public class Card : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		SetSortOrder(0);
 	}
-	
+
+	public void PopulateSpriteRenderers()
+	{
+		//If spriteRenderers is null or empty
+		if (spriteRenderers == null || spriteRenderers.Length == 0)
+		{
+			//Get SpriteRenderer Components of this GameObject and its children
+			spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+		}
+	}
+
+	//Sets the SortingLayerName on all SpriteRenderer Components
+	public void SetSortingLayerName(string tSLN)
+	{
+		PopulateSpriteRenderers();
+
+		foreach (SpriteRenderer tSR in spriteRenderers)
+		{
+			tSR.sortingLayerName = tSLN;
+		}
+	}
+
+	//Sets the sortingOrder of all SpriteRenderer Components
+	public void SetSortOrder(int sOrd)
+	{
+		PopulateSpriteRenderers();
+
+		//The white background of the card is on botton (sOrd)
+		//On top of that are all the pips, decorators, face, etc. (sOrd + 1)
+		//The back is on top so that when visible, it covers the rest (sOrd + 2)
+
+		//Iterate through all the spriteRenderers as tSR
+		foreach (SpriteRenderer tSR in spriteRenderers)
+		{
+			if (tSR.gameObject == this.gameObject)
+			{
+				//if the GameObject is this.gameObject, it's the background
+				tSR.sortingOrder = sOrd; //Set its order to sOrd
+				continue; //And continue to the next iteration of the loop
+			}
+			//Each of the children of this GameObject are named. Switch based on the names
+			switch (tSR.gameObject.name)
+			{
+				case "back": //If the name is "back"
+					tSR.sortingOrder = sOrd + 2; //Set it to the highest layer to cover everything else
+					break;
+				case "face": //If the name is "face"...
+				default: //or if it's anything else
+					tSR.sortingOrder = sOrd + 1; //Set it to the middle layer to be above the background
+					break;
+			}
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 	
