@@ -34,15 +34,12 @@ public class Card : MonoBehaviour {
 
 	public void PopulateSpriteRenderers()
 	{
-		//If spriteRenderers is null or empty
 		if (spriteRenderers == null || spriteRenderers.Length == 0)
 		{
-			//Get SpriteRenderer Components of this GameObject and its children
 			spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 		}
 	}
 
-	//Sets the SortingLayerName on all SpriteRenderer Components
 	public void SetSortingLayerName(string tSLN)
 	{
 		PopulateSpriteRenderers();
