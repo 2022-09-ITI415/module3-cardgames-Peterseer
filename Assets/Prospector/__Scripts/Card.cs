@@ -16,17 +16,6 @@ public class Card : MonoBehaviour {
 	public CardDefinition def;  // from DeckXML.xml		
 	public SpriteRenderer[] spriteRenderers;
 
-	public bool faceUp {
-		get {
-			return (!back.activeSelf);
-		}
-
-		set {
-			back.SetActive(!value);
-		}
-	}
-
-
 	// Use this for initialization
 	void Start () {
 		SetSortOrder(0);
@@ -55,26 +44,23 @@ public class Card : MonoBehaviour {
 	{
 		PopulateSpriteRenderers();
 
-		//The white background of the card is on botton (sOrd)
-		//On top of that are all the pips, decorators, face, etc. (sOrd + 1)
-		//The back is on top so that when visible, it covers the rest (sOrd + 2)
-
 		//Iterate through all the spriteRenderers as tSR
 		foreach (SpriteRenderer tSR in spriteRenderers)
 		{
 			if (tSR.gameObject == this.gameObject)
 			{
-				//if the GameObject is this.gameObject, it's the background
+				//if the GameObject is this.gameObject, it's the back-ground
 				tSR.sortingOrder = sOrd; //Set its order to sOrd
 				continue; //And continue to the next iteration of the loop
 			}
 			//Each of the children of this GameObject are named. Switch based on the names
+			//switch based on the names
 			switch (tSR.gameObject.name)
 			{
 				case "back": //If the name is "back"
-					tSR.sortingOrder = sOrd + 2; //Set it to the highest layer to cover everything else
+					tSR.sortingOrder = sOrd + 2; //Set it to the highest layer to cover other sprites
 					break;
-				case "face": //If the name is "face"...
+				case "face": //If the name is "face"
 				default: //or if it's anything else
 					tSR.sortingOrder = sOrd + 1; //Set it to the middle layer to be above the background
 					break;
@@ -82,8 +68,26 @@ public class Card : MonoBehaviour {
 		}
 	}
 
+	public bool faceUp
+	{
+		get
+		{
+			return (!back.activeSelf);
+		}
+
+		set
+		{
+			back.SetActive(!value);
+		}
+	}
+
+	virtual public void OnMouseUpAsButton()
+	{
+		print(name); // When clicked, this outputs the card name 
+	}
+   
 	// Update is called once per frame
-	void Update () {
+	   void Update () {
 	
 	}
 } // class Card

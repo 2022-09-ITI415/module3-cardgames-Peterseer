@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CardState
+public enum eCardState
 {
 	drawpile,
 	tableau,
@@ -12,7 +12,7 @@ public enum CardState
 
 public class CardProspector : Card
 { 
-	public CardState state = CardState.drawpile;
+	public eCardState state = eCardState.drawpile;
 
 	public List<CardProspector> hiddenBy = new List<CardProspector>();
 

@@ -41,6 +41,7 @@ public class Layout : MonoBehaviour
         SlotDef tSD;
         // slotsX is used as a shortcut to all the <slot>s 
         PT_XMLHashList slotsX = xml["slot"];
+
         for (int i = 0; i < slotsX.Count; i++)
         {
             tSD = new SlotDef(); // Create a new SlotDef instance
@@ -89,15 +90,5 @@ public class Layout : MonoBehaviour
             }
         }
     }
-        // Start is called before the first frame update
-        void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
