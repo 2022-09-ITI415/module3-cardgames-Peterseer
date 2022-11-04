@@ -81,7 +81,6 @@ public class Prospector : MonoBehaviour {
 			cp.layoutID = tSD.id;
 			cp.slotDef = tSD;
 			cp.state = eCardState.tableau;
-
 			cp.SetSortingLayerName(tSD.layerName);
 			tableau.Add(cp); 
 		}
@@ -178,6 +177,7 @@ public class Prospector : MonoBehaviour {
 				MoveToDiscard(target); //Moves the target to the discardPile
 				MoveToTarget(Draw()); //Moves the next drawn card to the target
 				UpdateDrawPile(); //Restacks the DrawPile
+				ScoreManager.EVENT(eScoreEvent.draw);
 				break;
 			case eCardState.tableau:
 				//Clicking a card in the tableau will check if it's a valid play
@@ -200,6 +200,7 @@ public class Prospector : MonoBehaviour {
 				tableau.Remove(cd); //Remove it from the tableau list
 				MoveToTarget(cd); //Make it the target card
 				SetTableauFaces();
+				ScoreManager.EVENT(eScoreEvent.mine);
 				break;
 		}
 
@@ -243,11 +244,13 @@ public class Prospector : MonoBehaviour {
 		{
 			//ScoreManager(ScoreEvent.gameWin);
 			print("Game Over. You Win!:)");
+			ScoreManager.EVENT(eScoreEvent.gameWin);
 		}
 		else
 		{
 			//ScoreManager(ScoreEvent.gameLoss);
 			print("Game Over. You Lost!:(");
+			ScoreManager.EVENT(eScoreEvent.gameLoss);
 		}
 
 		//Reload the scene in reloadDelay seconds
