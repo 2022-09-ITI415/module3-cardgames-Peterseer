@@ -50,7 +50,7 @@ public class Card : MonoBehaviour {
 			if (tSR.gameObject == this.gameObject)
 			{
 				//if the GameObject is this.gameObject, it's the back-ground
-				tSR.sortingOrder = sOrd; //Set its order to sOrd
+				tSR.sortingOrder = sOrd; //Set it's order to sOrd
 				continue; //And continue to the next iteration of the loop
 			}
 			//Each of the children of this GameObject are named. Switch based on the names
@@ -83,7 +83,7 @@ public class Card : MonoBehaviour {
 
 	virtual public void OnMouseUpAsButton()
 	{
-		print(name); // When clicked, this outputs the card name 
+		//print(name); // When clicked, this outputs the card name 
 	}
    
 	// Update is called once per frame

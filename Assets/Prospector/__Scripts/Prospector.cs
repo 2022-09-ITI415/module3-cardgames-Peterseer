@@ -165,24 +165,6 @@ public class Prospector : MonoBehaviour {
 		}
 	}
 
-	//This turns cards in the Mine face-up or face-down
-	void SetTableauFaces()
-	{
-		foreach (CardProspector cd in tableau)
-		{
-			bool fup = true; //Assume the card will be face-up
-			foreach (CardProspector cover in cd.hiddenBy)
-			{
-				//If either of the covering cards are in the tableau
-				if (cover.state == eCardState.tableau)
-				{
-					fup = false; //then this card is face-down
-				}
-			}
-			cd.faceUp = fup; //Set the value on the card
-		}
-	}
-
 	public void CardClicked(CardProspector cd)
 	{
 		//The reaction is determined by the state of the clicked card
@@ -217,8 +199,60 @@ public class Prospector : MonoBehaviour {
 
 				tableau.Remove(cd); //Remove it from the tableau list
 				MoveToTarget(cd); //Make it the target card
+				SetTableauFaces();
 				break;
 		}
+
+		CheckForGameOver();
+	}
+
+	void CheckForGameOver()
+	{
+		//If the tableau is empty, the game is over
+		if (tableau.Count == 0)
+		{
+			//Call GameOver() with a win
+			GameOver(true);
+			return;
+		}
+
+		//If there are still cards in the draw pile, the game's not over
+		if (drawPile.Count > 0)
+		{
+			return;
+		}
+
+		//Check for remaining valid plays
+		foreach (CardProspector cd in tableau)
+		{
+			if (AdjacentRank(cd, target))
+			{
+				//If there's a valid play, the game's not over
+				return;
+			}
+		}
+
+		//Since there are no valid plays, the game is over
+		//Call GameOver with a loss
+		GameOver(false);
+	}
+
+	void GameOver(bool won)
+	{
+		if (won)
+		{
+			//ScoreManager(ScoreEvent.gameWin);
+			print("Game Over. You Win!:)");
+		}
+		else
+		{
+			//ScoreManager(ScoreEvent.gameLoss);
+			print("Game Over. You Lost!:(");
+		}
+
+		//Reload the scene in reloadDelay seconds
+		//This will give the score a moment to travel
+		SceneManager.LoadScene("__Prospector_Scene_0");
 	}
 
 	public bool AdjacentRank(CardProspector c0, CardProspector c1)
@@ -263,6 +297,24 @@ public class Prospector : MonoBehaviour {
 		}
 		//If it'snot found, return null
 		return null;
+	}
+
+	//This turns cards in the Mine face-up or face-down
+	void SetTableauFaces()
+	{
+		foreach (CardProspector cd in tableau)
+		{
+			bool faceUp = true; //Assume the card will be face-up
+			foreach (CardProspector cover in cd.hiddenBy)
+			{
+				//If either of the covering cards are in the tableau
+				if (cover.state == eCardState.tableau)
+				{
+					faceUp = false; //then this card is face-down
+				}
+			}
+			cd.faceUp = faceUp; //Set the value on the card
+		}
 	}
 
 }
