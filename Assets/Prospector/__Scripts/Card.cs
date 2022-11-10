@@ -94,7 +94,7 @@ public class Card : MonoBehaviour {
 
 [System.Serializable]
 public class Decorator{
-	public string	type;			// For card pips, tyhpe = "pip"
+	public string	type;			// For card pips, type = "pip"
 	public Vector3	loc;			// location of sprite on the card
 	public bool		flip = false;	//whether to flip vertically
 	public float 	scale = 1.0f;

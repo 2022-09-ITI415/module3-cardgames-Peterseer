@@ -130,7 +130,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Settings.lighting
-  serializedVersion: 3
+  serializedVersion: 4
   m_GIWorkflowMode: 1
   m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 0
@@ -143,7 +143,7 @@ LightingSettings:
   m_LightmapMaxSize: 1024
   m_BakeResolution: 50
   m_Padding: 2
-  m_TextureCompression: 0
+  m_LightmapCompression: 0
   m_AO: 1
   m_AOMaxDistance: 1
   m_CompAOExponent: 1
@@ -184,6 +184,7 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
+  m_PVRTiledBaking: 0
 --- !u!1 &827460508
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +275,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -350,5 +352,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d7d9d9d58522f4cb96693ace07ad24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deckXML: {fileID: 4900000, guid: c76312a0fb08948699e1abf935e4a957, type: 3}
+  deckXML: {fileID: 4900000, guid: 9494b3c78d3598343914a353f1adc341, type: 3}
+  layoutXML: {fileID: 4900000, guid: 51f31797c93cacd4b9ff1b98e92ab732, type: 3}
+  xOffset: 3
+  yOffset: -2.5
+  layoutCenter: {x: 0, y: 0, z: 0}
+  fsPosMid: {x: 0.5, y: 0.9}
+  fsPosRun: {x: 0.5, y: 0.75}
+  fsPosMid2: {x: 0.4, y: 1}
+  fsPosEnd: {x: 0.5, y: 0.95}
+  gameOverText: {fileID: 0}
+  roundResultText: {fileID: 0}
+  highScoreText: {fileID: 0}
   deck: {fileID: 0}
+  layout: {fileID: 0}
+  drawPile: []
+  layoutAnchor: {fileID: 0}
+  target: {fileID: 0}
+  tableau: []
+  discardPile: []
+  fsRun: {fileID: 0}
