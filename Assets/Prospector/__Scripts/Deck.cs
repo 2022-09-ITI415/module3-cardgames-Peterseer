@@ -10,7 +10,8 @@ public class Deck : MonoBehaviour {
 	public Sprite suitDiamond;
 	public Sprite suitHeart;
 	public Sprite suitSpade;
-	
+	public Sprite joker;
+
 	public Sprite[] faceSprites;
 	public Sprite[] rankSprites;
 	
@@ -116,7 +117,11 @@ public class Deck : MonoBehaviour {
 					if(xPips[j].HasAtt("scale") ) {
 						deco.scale = float.Parse (xPips[j].att("scale"));
 					}
-					cDef.pips.Add (deco);
+					if (xPips[j].HasAtt("isAll"))
+                    {
+						//
+					}
+						cDef.pips.Add (deco);
 				} // for j
 			}// if xPips
 			
@@ -144,7 +149,7 @@ public class Deck : MonoBehaviour {
 		cardNames = new List<string>();
 		string[] letters = new string[] {"C","D","H","S"};
 		foreach (string s in letters) {
-			for (int i =0; i<13; i++) {
+			for (int i =0; i<14; i++) {
 				cardNames.Add(s+(i+1));
 			}
 		}

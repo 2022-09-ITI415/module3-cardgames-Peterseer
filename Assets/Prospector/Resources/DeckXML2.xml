@@ -2,6 +2,7 @@
 	<!-- decorators appear on every card. They are the suit and rank in the corners. -->
 	<decorator type="letter" x="-1.05" y="1.42" z="0" flip="0" scale="1.25"/>
 	<decorator type="suit" x="1.05" y="1.42" z="0" flip="0" scale="0.4"/>
+	
 
 	<!-- A list of all cards that defines where pips are placed. -->
 	<card rank="1">
@@ -38,4 +39,5 @@
 	<card rank="11" face="FaceCard_11"/>
 	<card rank="12" face="FaceCard_12"/>
 	<card rank="13" face="FaceCard_13"/>
+	<card rank="14" face="joker" isAll="1" />
 </xml>
