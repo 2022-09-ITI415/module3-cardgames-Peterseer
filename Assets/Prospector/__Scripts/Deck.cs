@@ -149,7 +149,7 @@ public class Deck : MonoBehaviour {
 		cardNames = new List<string>();
 		string[] letters = new string[] {"C","D","H","S"};
 		foreach (string s in letters) {
-			for (int i =0; i<14; i++) {
+			for (int i =0; i<13; i++) {
 				cardNames.Add(s+(i+1));
 			}
 		}
@@ -235,7 +235,6 @@ public class Deck : MonoBehaviour {
 			if (card.def.face != "") {
 				tGO = Instantiate(prefabSprite) as GameObject;
 				tSR = tGO.GetComponent<SpriteRenderer>();
-				
 				tS = GetFace(card.def.face+card.suit);
 				tSR.sprite = tS;
 				tSR.sortingOrder = 1;
