@@ -10,7 +10,6 @@ public class Deck : MonoBehaviour {
 	public Sprite suitDiamond;
 	public Sprite suitHeart;
 	public Sprite suitSpade;
-	public Sprite joker;
 
 	public Sprite[] faceSprites;
 	public Sprite[] rankSprites;
@@ -51,7 +50,8 @@ public class Deck : MonoBehaviour {
 			{"C", suitClub},
 			{"D", suitDiamond},
 			{"H", suitHeart},
-			{"S", suitSpade}
+			{"S", suitSpade},
+			{"J", null }
 		};
 		
 		
@@ -117,10 +117,6 @@ public class Deck : MonoBehaviour {
 					if(xPips[j].HasAtt("scale") ) {
 						deco.scale = float.Parse (xPips[j].att("scale"));
 					}
-					if (xPips[j].HasAtt("isAll"))
-                    {
-						//
-					}
 						cDef.pips.Add (deco);
 				} // for j
 			}// if xPips
@@ -153,7 +149,8 @@ public class Deck : MonoBehaviour {
 				cardNames.Add(s+(i+1));
 			}
 		}
-		
+		cardNames.Add("J14");
+
 		// list of all Cards
 		cards = new List<Card>();
 		
@@ -177,6 +174,10 @@ public class Deck : MonoBehaviour {
 				card.colS = "Red";
 				card.color = Color.red;
 			}
+			else if(card.suit =="J")
+            {
+				//
+			}
 			
 			card.def = GetCardDefinitionByRank(card.rank);
 			
@@ -188,6 +189,11 @@ public class Deck : MonoBehaviour {
 					tSR.sprite = dictSuits[card.suit];
 				} else { // it is a rank
 					tS = rankSprites[card.rank];
+					if (card.rank == 14)
+                    {
+						tS = rankSprites[0];
+
+					}
 					tSR.sprite = tS;
 					tSR.color = card.color;
 				}
@@ -235,7 +241,16 @@ public class Deck : MonoBehaviour {
 			if (card.def.face != "") {
 				tGO = Instantiate(prefabSprite) as GameObject;
 				tSR = tGO.GetComponent<SpriteRenderer>();
-				tS = GetFace(card.def.face+card.suit);
+				if(card.def.rank <=13)
+                {
+					tS = GetFace(card.def.face + card.suit);
+				}
+                else
+                {
+					print(card.def.face);
+					tS = GetFace(card.def.face);
+
+				}
 				tSR.sprite = tS;
 				tSR.sortingOrder = 1;
 				tGO.transform.parent=card.transform;

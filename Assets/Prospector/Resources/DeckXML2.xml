@@ -39,4 +39,5 @@
 	<card rank="11" face="FaceCard_11"/>
 	<card rank="12" face="FaceCard_12"/>
 	<card rank="13" face="FaceCard_13"/>
+	<card rank="14" face="joker"/>
 </xml>
