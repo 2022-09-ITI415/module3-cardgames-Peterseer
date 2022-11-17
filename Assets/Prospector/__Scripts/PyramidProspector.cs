@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+//https://cardgames.io/pyramidsolitaire/
 
 
 public class PyramidProspector : MonoBehaviour {
@@ -110,8 +111,7 @@ public class PyramidProspector : MonoBehaviour {
 		foreach (SlotDef tSD in layout.slotDefs) 
 		{
 			cp = Draw();
-			print(tSD.faceUp);
-			cp.faceUp = tSD.faceUp; 
+			cp.faceUp = tSD.faceUp;
 			cp.transform.parent = layoutAnchor; 
 
 			cp.transform.localPosition = new Vector3(
@@ -130,6 +130,7 @@ public class PyramidProspector : MonoBehaviour {
 			foreach (int hid in tCP.slotDef.hiddenBy)
 			{
 				cp = FindCardByLayoutID(hid);
+				print(cp);
 				if(!tCP.hiddenBy.Contains(cp))
                 {
 					tCP.hiddenBy.Add(cp);

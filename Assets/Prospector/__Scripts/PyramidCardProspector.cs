@@ -18,6 +18,8 @@ public class PyramidCardProspector : Card
 
 	public int layoutID;
 
+	public new bool faceUp = true;
+
 	public SlotDef slotDef;
 
 	override public void OnMouseUpAsButton()
