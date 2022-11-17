@@ -31,6 +31,7 @@ public class PyramidProspector : MonoBehaviour {
 	public List<PyramidCardProspector> tableau;
 	public List<PyramidCardProspector> discardPile;
 	public FloatingScore fsRun;
+	public PyramidCardProspector chosenCard;
 
 	   void Awake(){
 		S = this;
@@ -214,7 +215,9 @@ public class PyramidProspector : MonoBehaviour {
 		switch (cd.state)
 		{
 			case CardState.target:
-				//Clicking the target card does nothing
+				chosenCard = cd;
+				//点击后将当前卡属性赋值到chosenCard中
+				
 				break;
 			case CardState.drawpile:
 				//Clicking any card in the drawPile will draw the next card
@@ -336,18 +339,13 @@ public class PyramidProspector : MonoBehaviour {
 		}
 
 		//If they are 1 apart, they are adjacent
-		if (Mathf.Abs(c0.rank - c1.rank) == 1)
+		if (Mathf.Abs(c0.rank + c1.rank) == 13)
 		{
 			return (true);
 		}
 
 		//If one is A and the other King, they're adjacent
-		if (c0.rank == 1 && c1.rank == 13)
-		{
-			return true;
-		}
-
-		if (c0.rank == 13 && c1.rank == 1)
+		if (c0.rank == 13 || c1.rank == 13)
 		{
 			return true;
 		}
