@@ -10,7 +10,7 @@ public class Deck : MonoBehaviour {
 	public Sprite suitDiamond;
 	public Sprite suitHeart;
 	public Sprite suitSpade;
-	
+
 	public Sprite[] faceSprites;
 	public Sprite[] rankSprites;
 	
@@ -50,7 +50,7 @@ public class Deck : MonoBehaviour {
 			{"C", suitClub},
 			{"D", suitDiamond},
 			{"H", suitHeart},
-			{"S", suitSpade}
+			{"S", suitSpade},
 		};
 		
 		
@@ -116,7 +116,7 @@ public class Deck : MonoBehaviour {
 					if(xPips[j].HasAtt("scale") ) {
 						deco.scale = float.Parse (xPips[j].att("scale"));
 					}
-					cDef.pips.Add (deco);
+						cDef.pips.Add (deco);
 				} // for j
 			}// if xPips
 			
@@ -148,7 +148,7 @@ public class Deck : MonoBehaviour {
 				cardNames.Add(s+(i+1));
 			}
 		}
-		
+
 		// list of all Cards
 		cards = new List<Card>();
 		
@@ -230,8 +230,16 @@ public class Deck : MonoBehaviour {
 			if (card.def.face != "") {
 				tGO = Instantiate(prefabSprite) as GameObject;
 				tSR = tGO.GetComponent<SpriteRenderer>();
-				
-				tS = GetFace(card.def.face+card.suit);
+				if(card.def.rank <=13)
+                {
+					tS = GetFace(card.def.face + card.suit);
+				}
+                else
+                {
+					print(card.def.face);
+					tS = GetFace(card.def.face);
+
+				}
 				tSR.sprite = tS;
 				tSR.sortingOrder = 1;
 				tGO.transform.parent=card.transform;
