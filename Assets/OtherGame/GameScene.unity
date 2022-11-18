@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &53564038
 RectTransform:
   m_ObjectHideFlags: 0
@@ -570,6 +570,26 @@ MonoBehaviour:
     hiddenBy: 
     type: slot
     stagger: {x: 0, y: 0}
+  dropPile:
+    x: 0
+    y: 0
+    faceUp: 0
+    layerName: Default
+    layerID: 0
+    id: 0
+    hiddenBy: 
+    type: slot
+    stagger: {x: 0, y: 0}
+  targetPile:
+    x: 0
+    y: 0
+    faceUp: 0
+    layerName: Default
+    layerID: 0
+    id: 0
+    hiddenBy: 
+    type: slot
+    stagger: {x: 0, y: 0}
   sortingLayerNames:
   - Row0
   - Row1
@@ -627,6 +647,8 @@ MonoBehaviour:
   target: {fileID: 0}
   tableau: []
   discardPile: []
+  dropPile: []
+  targetPile: []
   fsRun: {fileID: 0}
   chosenCard: {fileID: 0}
 --- !u!114 &827460519
@@ -707,7 +729,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1308383200
 RectTransform:
   m_ObjectHideFlags: 0
@@ -868,7 +890,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1749114226
 RectTransform:
   m_ObjectHideFlags: 0

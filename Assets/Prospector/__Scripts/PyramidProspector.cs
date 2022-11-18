@@ -30,10 +30,12 @@ public class PyramidProspector : MonoBehaviour {
 	public PyramidCardProspector target;
 	public List<PyramidCardProspector> tableau;
 	public List<PyramidCardProspector> discardPile;
+	public List<PyramidCardProspector> dropPile;
+	public List<PyramidCardProspector> targetPile;
 	public FloatingScore fsRun;
-	public PyramidCardProspector chosenCard;
+    public PyramidCardProspector chosenCard = null;
 
-	   void Awake(){
+    void Awake(){
 		S = this;
 		SetUpUITexts();
 	}
@@ -46,19 +48,11 @@ public class PyramidProspector : MonoBehaviour {
 		{
 			highScoreText = go.GetComponent<Text>();
 		}
-		int highScore = ScoreManager.HIGH_SCORE;
-		string hScore = "High Score: " + Utils.AddCommasToNumber(highScore);
-		go.GetComponent<Text>().text = hScore;
 		// Set up the UI Texts that show at the end of the round 
 		go = GameObject.Find("GameOver");
 		if (go != null)
 		{
 			gameOverText = go.GetComponent<Text>();
-		}
-		go = GameObject.Find("RoundResult");
-		if (go != null)
-		{
-			roundResultText = go.GetComponent<Text>();
 		}
 		// Make the end of round texts invisible 
 		ShowResultsUI(false);
@@ -70,7 +64,6 @@ public class PyramidProspector : MonoBehaviour {
 	}
 
 	void Start() {
-		Scoreboard.S.score = ScoreManager.SCORE;
 		deck = GetComponent<PyramidDeck> ();
 		deck.InitDeck (deckXML.text);
 		Deck.Shuffle(ref deck.cards);
@@ -168,6 +161,7 @@ public class PyramidProspector : MonoBehaviour {
 		if (target != null) MoveToDiscard(target);
 		target = cd; //cd is the new target
 		cd.state = CardState.target;
+		targetPile.Add(cd); //Add it to the discardPile List<>
 		cd.transform.parent = layoutAnchor;
 
 		//Move to the target position
@@ -179,7 +173,26 @@ public class PyramidProspector : MonoBehaviour {
 
 		//Set the depth sorting
 		cd.SetSortingLayerName(layout.discardPile.layerName);
-		cd.SetSortOrder(0);
+		cd.SetSortOrder(-100 + discardPile.Count);
+		UpdateDrawPile();
+	}
+
+	void MoveToDrop(PyramidCardProspector cd)
+    {
+		cd.state = CardState.drop;
+		dropPile.Add(cd); //Add it to the discardPile List<>
+		cd.transform.parent = layoutAnchor;
+		cd.transform.localPosition = new Vector3(
+			layout.multiplier.x * layout.dropPile.x,
+			layout.multiplier.y * layout.dropPile.y,
+			-layout.dropPile.layerID); //Position it on the discardPile
+		cd.faceUp = true;
+
+		//Place it on top of the pile for depth sorting
+		print("层名字：" + layout.dropPile.layerName);
+		cd.SetSortingLayerName(layout.dropPile.layerName);
+		cd.SetSortOrder(-100 + dropPile.Count);
+		UpdateDropPile();
 	}
 
 	//Arranges all the cards of the drawPile to show how many are left
@@ -198,13 +211,60 @@ public class PyramidProspector : MonoBehaviour {
 			cd.transform.localPosition = new Vector3(
 				layout.multiplier.x * (layout.drawPile.x + i * dpStagger.x),
 				layout.multiplier.y * (layout.drawPile.y + i * dpStagger.y),
-				-layout.drawPile.layerID + 0.1f * i);
+				layout.drawPile.layerID + 0.1f * i);
 			cd.faceUp = false; //Make them all face-down
 			cd.state = CardState.drawpile;
 
 			//Set the depth sorting
 			cd.SetSortingLayerName(layout.drawPile.layerName);
-			cd.SetSortOrder(-10 * i);
+			cd.SetSortOrder(10 * i);
+		}
+	}
+
+	void UpdateDiscardPile()
+	{
+		PyramidCardProspector cd;
+
+		//Go through all the cards of the drawPile
+		for (int i = 0; i < discardPile.Count; i++)
+		{
+			cd = discardPile[i];
+			cd.transform.parent = layoutAnchor;
+
+			//Position it correctly with the layout.drawPile.stagger
+			Vector2 dpStagger = layout.discardPile.stagger;
+			cd.transform.localPosition = new Vector3(
+				layout.multiplier.x * (layout.discardPile.x),
+				layout.multiplier.y * (layout.discardPile.y),
+				-layout.discardPile.layerID + 0.1f * i);
+			cd.faceUp = false; //Make them all face-down
+			cd.state = CardState.discard;
+
+		}
+	}
+
+	void UpdateDropPile()
+	{
+		PyramidCardProspector cd;
+
+		//Go through all the cards of the drawPile
+		for (int i = 0; i < dropPile.Count; i++)
+		{
+			cd = dropPile[i];
+			cd.transform.parent = layoutAnchor;
+
+			//Position it correctly with the layout.drawPile.stagger
+			Vector2 dpStagger = layout.dropPile.stagger;
+			cd.transform.localPosition = new Vector3(
+				layout.multiplier.x * (layout.dropPile.x + i * dpStagger.x),
+				layout.multiplier.y * (layout.dropPile.y + i * dpStagger.y),
+				-layout.dropPile.layerID + 0.1f * i);
+			cd.faceUp = false; //Make them all face-down
+			cd.state = CardState.drop;
+
+			//Set the depth sorting
+			cd.SetSortingLayerName(layout.dropPile.layerName);
+			cd.SetSortOrder(10 * i);
 		}
 	}
 
@@ -219,9 +279,10 @@ public class PyramidProspector : MonoBehaviour {
 				//点击后将当前卡属性赋值到chosenCard中
 				if(chosenCard.rank == 13)
                 {
-					MoveToDiscard(cd); //Make it the target card
-					ScoreManager.EVENT(eScoreEvent.mine);
-					FloatingScoreHandler(eScoreEvent.mine);
+					MoveToDrop(cd); //Make it the target card
+					//ScoreManager.EVENT(eScoreEvent.mine);
+					//FloatingScoreHandler(eScoreEvent.mine);
+					chosenCard = null;
 					break;
 				}
 				print("这张卡不是K");
@@ -231,8 +292,9 @@ public class PyramidProspector : MonoBehaviour {
 				//MoveToDiscard(target); //Moves the target to the discardPile
 				MoveToTarget(Draw()); //Moves the next drawn card to the target
 				UpdateDrawPile(); //Restacks the DrawPile
-				ScoreManager.EVENT(eScoreEvent.draw);
-				FloatingScoreHandler(eScoreEvent.draw);
+				chosenCard = null;
+				//ScoreManager.EVENT(eScoreEvent.draw);
+				//FloatingScoreHandler(eScoreEvent.draw);
 				break;
 			case CardState.tableau:
 				bool validMatch = true;
@@ -244,16 +306,24 @@ public class PyramidProspector : MonoBehaviour {
 						//If it's not an adjacent rank, it's not valid
 						validMatch = false;
 						print("配对失败！");
+						chosenCard = null;
 					}
                     else
                     {
 						print("配对成功！");
-						MoveToDiscard(chosenCard); //move to discard pile.
+						MoveToDrop(chosenCard); //move to drop pile.
+						chosenCard = null;
+					}
+
+					if (!validMatch)
+					{
+						return; //return if not valid
 					}
 				}
                 else
                 {
 					chosenCard = cd;
+					print("选中第一张卡: "+cd);
 					//Tableu is 13K
 					//Clicking a card in the tableau will check if it's a valid play
 					if (!cd.faceUp)
@@ -261,21 +331,21 @@ public class PyramidProspector : MonoBehaviour {
 						//If the card is face-down, it's not valid
 						validMatch = false;
 					}
-					if (!AdjacentRank(cd, target))
-					{
-						//If it's not an adjacent rank, it's not valid
-						validMatch = false;
+					if(cd.rank == 13)
+                    {
+						print("这是张K！");
+						chosenCard = null;
 					}
-					if (!validMatch)
-					{
-						return; //return if not valid
-					}
+					else
+                    {
+						return;
+					}						
 				}
 				tableau.Remove(cd); //Remove it from the tableau list
-				MoveToDiscard(cd); //move to discard pile.
+				MoveToDrop(cd); //move to discard pile.
 				SetTableauFaces();
-				ScoreManager.EVENT(eScoreEvent.mine);
-				FloatingScoreHandler(eScoreEvent.mine);
+				//ScoreManager.EVENT(eScoreEvent.mine);
+				//FloatingScoreHandler(eScoreEvent.mine);
 				break;
 		}
 
@@ -368,12 +438,6 @@ public class PyramidProspector : MonoBehaviour {
 		if (Mathf.Abs(c0.rank + c1.rank) == 13)
 		{
 			return (true);
-		}
-
-		//If one of them is King
-		if (c0.rank == 13 || c1.rank == 13)
-		{
-			return true;
 		}
 
 		//Joker!
