@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Deck : MonoBehaviour {
+public class PyramidDeck : MonoBehaviour {
 
 [Header("Set in Inspector")]
 	//Suits
@@ -51,6 +51,7 @@ public class Deck : MonoBehaviour {
 			{"D", suitDiamond},
 			{"H", suitHeart},
 			{"S", suitSpade},
+			{"J", null }
 		};
 		
 		
@@ -148,6 +149,7 @@ public class Deck : MonoBehaviour {
 				cardNames.Add(s+(i+1));
 			}
 		}
+		cardNames.Add("J14");
 
 		// list of all Cards
 		cards = new List<Card>();
@@ -172,6 +174,10 @@ public class Deck : MonoBehaviour {
 				card.colS = "Red";
 				card.color = Color.red;
 			}
+			else if(card.suit =="J")
+            {
+				//
+			}
 			
 			card.def = GetCardDefinitionByRank(card.rank);
 			
@@ -183,6 +189,11 @@ public class Deck : MonoBehaviour {
 					tSR.sprite = dictSuits[card.suit];
 				} else { // it is a rank
 					tS = rankSprites[card.rank];
+					if (card.rank == 14)
+                    {
+						tS = rankSprites[0];
+
+					}
 					tSR.sprite = tS;
 					tSR.color = card.color;
 				}
@@ -221,7 +232,10 @@ public class Deck : MonoBehaviour {
 				
 				tGO.name = "pip";
 				tSR = tGO.GetComponent<SpriteRenderer>();
-				tSR.sprite = dictSuits[card.suit];
+				if(card.rank != 14)
+                {
+					tSR.sprite = dictSuits[card.suit];
+				}
 				tSR.sortingOrder = 1;
 				card.pipGOs.Add (tGO);
 			}
@@ -236,7 +250,6 @@ public class Deck : MonoBehaviour {
 				}
                 else
                 {
-					print(card.def.face);
 					tS = GetFace(card.def.face);
 
 				}

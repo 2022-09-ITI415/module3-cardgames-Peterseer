@@ -7,7 +7,8 @@ public enum CardState
 	drawpile,
 	tableau,
 	target,
-	discard
+	discard,
+	drop
 }
 
 public class PyramidCardProspector : Card

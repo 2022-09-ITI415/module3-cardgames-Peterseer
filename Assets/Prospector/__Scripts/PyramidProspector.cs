@@ -23,7 +23,7 @@ public class PyramidProspector : MonoBehaviour {
 	public Text gameOverText, roundResultText, highScoreText;
 
 	[Header("Set Dynamically")]
-	public Deck					deck;
+	public PyramidDeck					deck;
 	public Layout layout;
 	public List<PyramidCardProspector> drawPile;
 	public Transform layoutAnchor;
@@ -71,7 +71,7 @@ public class PyramidProspector : MonoBehaviour {
 
 	void Start() {
 		Scoreboard.S.score = ScoreManager.SCORE;
-		deck = GetComponent<Deck> ();
+		deck = GetComponent<PyramidDeck> ();
 		deck.InitDeck (deckXML.text);
 		Deck.Shuffle(ref deck.cards);
 		layout = GetComponent<Layout>();  // Get the Layout component 
@@ -131,7 +131,6 @@ public class PyramidProspector : MonoBehaviour {
 			foreach (int hid in tCP.slotDef.hiddenBy)
 			{
 				cp = FindCardByLayoutID(hid);
-				print(cp);
 				if(!tCP.hiddenBy.Contains(cp))
                 {
 					tCP.hiddenBy.Add(cp);
@@ -216,37 +215,64 @@ public class PyramidProspector : MonoBehaviour {
 		{
 			case CardState.target:
 				chosenCard = cd;
+				print("已选中卡牌: "+chosenCard);
 				//点击后将当前卡属性赋值到chosenCard中
-				
+				if(chosenCard.rank == 13)
+                {
+					MoveToDiscard(cd); //Make it the target card
+					ScoreManager.EVENT(eScoreEvent.mine);
+					FloatingScoreHandler(eScoreEvent.mine);
+					break;
+				}
+				print("这张卡不是K");
 				break;
 			case CardState.drawpile:
 				//Clicking any card in the drawPile will draw the next card
-				MoveToDiscard(target); //Moves the target to the discardPile
+				//MoveToDiscard(target); //Moves the target to the discardPile
 				MoveToTarget(Draw()); //Moves the next drawn card to the target
 				UpdateDrawPile(); //Restacks the DrawPile
 				ScoreManager.EVENT(eScoreEvent.draw);
 				FloatingScoreHandler(eScoreEvent.draw);
 				break;
 			case CardState.tableau:
-				//Clicking a card in the tableau will check if it's a valid play
 				bool validMatch = true;
-				if (!cd.faceUp)
-				{
-					//If the card is face-down, it's not valid
-					validMatch = false;
+				if (chosenCard != null) //Match with chosenCard that is clicked on target
+                {
+					print("已选中卡牌: " + chosenCard + " 还有桌面上的卡牌: " + cd);
+					if (!AdjacentRank(cd, chosenCard))
+					{
+						//If it's not an adjacent rank, it's not valid
+						validMatch = false;
+						print("配对失败！");
+					}
+                    else
+                    {
+						print("配对成功！");
+						MoveToDiscard(chosenCard); //move to discard pile.
+					}
 				}
-				if (!AdjacentRank(cd, target))
-				{
-					//If it's not an adjacent rank, it's not valid
-					validMatch = false;
+                else
+                {
+					chosenCard = cd;
+					//Tableu is 13K
+					//Clicking a card in the tableau will check if it's a valid play
+					if (!cd.faceUp)
+					{
+						//If the card is face-down, it's not valid
+						validMatch = false;
+					}
+					if (!AdjacentRank(cd, target))
+					{
+						//If it's not an adjacent rank, it's not valid
+						validMatch = false;
+					}
+					if (!validMatch)
+					{
+						return; //return if not valid
+					}
 				}
-				if (!validMatch)
-				{
-					return; //return if not valid
-				}
-
 				tableau.Remove(cd); //Remove it from the tableau list
-				MoveToTarget(cd); //Make it the target card
+				MoveToDiscard(cd); //move to discard pile.
 				SetTableauFaces();
 				ScoreManager.EVENT(eScoreEvent.mine);
 				FloatingScoreHandler(eScoreEvent.mine);
@@ -338,14 +364,20 @@ public class PyramidProspector : MonoBehaviour {
 			return (false);
 		}
 
-		//If they are 1 apart, they are adjacent
+		//If they add up equals to 13
 		if (Mathf.Abs(c0.rank + c1.rank) == 13)
 		{
 			return (true);
 		}
 
-		//If one is A and the other King, they're adjacent
+		//If one of them is King
 		if (c0.rank == 13 || c1.rank == 13)
+		{
+			return true;
+		}
+
+		//Joker!
+		if (c0.rank == 14 || c1.rank == 14)
 		{
 			return true;
 		}
